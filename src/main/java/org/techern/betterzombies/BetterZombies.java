@@ -15,8 +15,6 @@ public class BetterZombies
 
     public BetterZombies()
     {
-        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
-
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
     }
