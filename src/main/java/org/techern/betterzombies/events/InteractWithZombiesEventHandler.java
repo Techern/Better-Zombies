@@ -2,6 +2,9 @@ package org.techern.betterzombies.events;
 
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Drowned;
+import net.minecraft.world.entity.monster.Husk;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,8 +35,12 @@ public class InteractWithZombiesEventHandler {
         if (event.getEntity().getItemInHand(event.getHand()).getItem().equals(Items.GOLDEN_APPLE)) {
 
             EntityType<?> type = event.getTarget().getType();
-            if (type.equals(EntityType.ZOMBIE) || type.equals(EntityType.HUSK) || type.equals(EntityType.DROWNED)) {
-                playerInteractsWithZombie(event, event.getTarget().getType());
+            if (type.equals(EntityType.ZOMBIE)) {
+                playerInteractsWithZombie(event, (Zombie) event.getTarget());
+            } else if (type.equals(EntityType.HUSK)) {
+                playerInteractsWithZombie(event, (Husk) event.getTarget());
+            } else if (type.equals(EntityType.DROWNED)) {
+                playerInteractsWithZombie(event, (Drowned) event.getTarget());
             } else if (EntityType.ZOMBIE_HORSE.equals(type)) {
                 playerInteractsWithZombieHorse(event);
             } else if (EntityType.ZOMBIE_VILLAGER.equals((type))) {
@@ -45,18 +52,18 @@ public class InteractWithZombiesEventHandler {
     }
 
     /**
-     * Only called whenever a {@link PlayerInteractEvent.EntityInteractSpecific} is for a {@link EntityType} that is a zombie mob
+     * Only called whenever a {@link PlayerInteractEvent.EntityInteractSpecific} is for a mob that is a zombie mob
      *
      * @param event The {@link PlayerInteractEvent}
-     * @param zombieType The type of zombie
+     * @param mob the {@link Zombie} mob
      * @since 0.1
      */
-    protected static void playerInteractsWithZombie(PlayerInteractEvent.EntityInteractSpecific event, EntityType zombieType) {
-        event.getEntity().sendSystemMessage(Component.literal("You tried to cure a zombie that isn't a villager"));
+    protected static <T extends Zombie> void playerInteractsWithZombie(PlayerInteractEvent.EntityInteractSpecific event, T mob) {
+        event.getEntity().sendSystemMessage(Component.literal("You tried to cure a " + mob.getName().getString() + " that isn't a villager"));
     }
 
     /**
-     * Only called whenever a {@link PlayerInteractEvent.EntityInteractSpecific} is for a {@link EntityType} that is a zombie horse
+     * Only called whenever a {@link PlayerInteractEvent.EntityInteractSpecific} is for a mob that is a zombie horse
      *
      * @param event The {@link PlayerInteractEvent}
      * @since 0.1
@@ -66,7 +73,7 @@ public class InteractWithZombiesEventHandler {
     }
 
     /**
-     * Only called whenever a {@link PlayerInteractEvent.EntityInteractSpecific} is for a {@link EntityType} that is a zombie villager
+     * Only called whenever a {@link PlayerInteractEvent.EntityInteractSpecific} is for a mob hat is a zombie villager
      *
      * @param event The {@link PlayerInteractEvent}
      * @since 0.1
@@ -76,7 +83,7 @@ public class InteractWithZombiesEventHandler {
     }
 
     /**
-     * Only called whenever a {@link PlayerInteractEvent.EntityInteractSpecific} is for a {@link EntityType} that is a zoglin mob
+     * Only called whenever a {@link PlayerInteractEvent.EntityInteractSpecific} is for a mob that is a zoglin mob
      *
      * @param event The {@link PlayerInteractEvent}
      * @since 0.1
