@@ -29,7 +29,7 @@ displayName="Better Zombies" #mandatory
 # A file name (in the root of the mod JAR) containing a logo for display
 # logoFile="examplemod.png" #optional
 # A text field displayed in the mod UI
-credits="Thanks to ImmortalAbsol on CurseForge for requesting this mod" #optional
+credits="Thanks to ImmortalAbsol on CurseForge" #optional
 # A text field displayed in the mod UI
 authors="Cruz Bishop at Techern" #optional
 # Display Test controls the display for your mod in the server connection screen
