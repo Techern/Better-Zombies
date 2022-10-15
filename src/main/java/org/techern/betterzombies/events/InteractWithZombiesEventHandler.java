@@ -1,10 +1,12 @@
 package org.techern.betterzombies.events;
 
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Drowned;
-import net.minecraft.world.entity.monster.Husk;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.animal.horse.ZombieHorse;
+import net.minecraft.world.entity.monster.*;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,6 +34,7 @@ public class InteractWithZombiesEventHandler {
             return;
         }
 
+        //TODO #5 allow conversion with enchanted apple
         if (event.getEntity().getItemInHand(event.getHand()).getItem().equals(Items.GOLDEN_APPLE)) {
 
             EntityType<?> type = event.getTarget().getType();
@@ -52,6 +55,20 @@ public class InteractWithZombiesEventHandler {
     }
 
     /**
+     * Checks to see if the {@link Mob} can be converted according to current game rules
+     *
+     * @param mobToConvert the {@link Mob} to convert
+     * @return {@code true} if it can be converted, otherwise {@code false}
+     * @since 0.1
+     */
+    private static <T extends Mob> boolean meetsConversionRequirements(T mobToConvert) {
+        //TODO #5 allow conversion with no buff
+        if (mobToConvert.hasEffect(MobEffects.WEAKNESS)) return true;
+
+        return false;
+    }
+
+    /**
      * Only called whenever a {@link PlayerInteractEvent.EntityInteractSpecific} is for a mob that is a zombie mob
      *
      * @param event The {@link PlayerInteractEvent}
@@ -59,7 +76,8 @@ public class InteractWithZombiesEventHandler {
      * @since 0.1
      */
     protected static <T extends Zombie> void playerInteractsWithZombie(PlayerInteractEvent.EntityInteractSpecific event, T mob) {
-        event.getEntity().sendSystemMessage(Component.literal("You tried to cure a " + mob.getName().getString() + " that isn't a villager"));
+        mob.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 20*60*5, 4));
+        mob.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 20*60*5, 30));
     }
 
     /**
@@ -69,7 +87,9 @@ public class InteractWithZombiesEventHandler {
      * @since 0.1
      */
     protected static void playerInteractsWithZombieHorse(PlayerInteractEvent.EntityInteractSpecific event) {
-        event.getEntity().sendSystemMessage(Component.literal("that's a horse"));
+        ZombieHorse zombieHorse = (ZombieHorse) event.getTarget();
+        if (meetsConversionRequirements(zombieHorse)) {
+        }
     }
 
     /**
@@ -79,7 +99,9 @@ public class InteractWithZombiesEventHandler {
      * @since 0.1
      */
     protected static void playerInteractsWithZombieVillager(PlayerInteractEvent.EntityInteractSpecific event) {
-        event.getEntity().sendSystemMessage(Component.literal("YES!"));
+        ZombieVillager zombieVillager = (ZombieVillager) event.getTarget();
+        if (meetsConversionRequirements(zombieVillager)) {
+        }
     }
 
     /**
@@ -89,6 +111,8 @@ public class InteractWithZombiesEventHandler {
      * @since 0.1
      */
     protected static void playerInteractsWithZombiePiglin(PlayerInteractEvent.EntityInteractSpecific event) {
-        event.getEntity().sendSystemMessage(Component.literal("*pig noises*"));
+        ZombifiedPiglin zombifiedPiglin = (ZombifiedPiglin) event.getTarget();
+        if (meetsConversionRequirements(zombifiedPiglin)) {
+        }
     }
 }
