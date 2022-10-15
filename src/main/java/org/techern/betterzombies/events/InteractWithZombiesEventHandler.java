@@ -140,6 +140,7 @@ public class InteractWithZombiesEventHandler {
 
             piglin.finalizeSpawn(level, level.getCurrentDifficultyAt(piglin.blockPosition()), MobSpawnType.CONVERSION, (SpawnGroupData)null, (CompoundTag)null);
             piglin.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
+            piglin.setImmuneToZombification(true);
             level.levelEvent((Player)null, 1027, piglin.blockPosition(), 0);
             event.getEntity().getItemInHand(event.getHand()).shrink(1);
         }
@@ -160,6 +161,7 @@ public class InteractWithZombiesEventHandler {
 
             pig.finalizeSpawn(level, level.getCurrentDifficultyAt(pig.blockPosition()), MobSpawnType.CONVERSION, (SpawnGroupData)null, (CompoundTag)null);
             pig.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
+            pig.setImmuneToZombification(true);
             level.levelEvent((Player)null, 1027, pig.blockPosition(), 0);
             event.getEntity().getItemInHand(event.getHand()).shrink(1);
         }
