@@ -10,9 +10,11 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.animal.horse.ZombieHorse;
 import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.monster.hoglin.Hoglin;
 import net.minecraft.world.entity.monster.piglin.Piglin;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
@@ -58,6 +60,8 @@ public class InteractWithZombiesEventHandler {
                 playerInteractsWithZombieVillager(event);
             } else if (EntityType.ZOMBIFIED_PIGLIN.equals((type))) {
                 playerInteractsWithZombiePiglin(event);
+            } else if (EntityType.ZOGLIN.equals((type))) {
+                playerInteractsWithZoglin(event);
             }
         }
     }
@@ -122,7 +126,7 @@ public class InteractWithZombiesEventHandler {
     }
 
     /**
-     * Only called whenever a {@link PlayerInteractEvent.EntityInteractSpecific} is for a mob that is a zoglin mob
+     * Only called whenever a {@link PlayerInteractEvent.EntityInteractSpecific} is for a mob that is a zombie piglin mob
      *
      * @param event The {@link PlayerInteractEvent}
      * @since 0.1
@@ -137,6 +141,26 @@ public class InteractWithZombiesEventHandler {
             piglin.finalizeSpawn(level, level.getCurrentDifficultyAt(piglin.blockPosition()), MobSpawnType.CONVERSION, (SpawnGroupData)null, (CompoundTag)null);
             piglin.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
             level.levelEvent((Player)null, 1027, piglin.blockPosition(), 0);
+            event.getEntity().getItemInHand(event.getHand()).shrink(1);
+        }
+    }
+
+    /**
+     * Only called whenever a {@link PlayerInteractEvent.EntityInteractSpecific} is for a mob that is a zoglin mob
+     *
+     * @param event The {@link PlayerInteractEvent}
+     * @since 0.1
+     */
+    protected static void playerInteractsWithZoglin(PlayerInteractEvent.EntityInteractSpecific event) {
+        Zoglin zoglin = (Zoglin) event.getTarget();
+        ServerLevel level = (ServerLevel) event.getLevel();
+
+        if (meetsConversionRequirements(zoglin)) {
+            Hoglin pig = zoglin.convertTo(EntityType.HOGLIN, false);
+
+            pig.finalizeSpawn(level, level.getCurrentDifficultyAt(pig.blockPosition()), MobSpawnType.CONVERSION, (SpawnGroupData)null, (CompoundTag)null);
+            pig.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
+            level.levelEvent((Player)null, 1027, pig.blockPosition(), 0);
             event.getEntity().getItemInHand(event.getHand()).shrink(1);
         }
     }
