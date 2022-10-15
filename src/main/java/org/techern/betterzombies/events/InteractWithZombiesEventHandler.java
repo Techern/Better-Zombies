@@ -1,14 +1,20 @@
 package org.techern.betterzombies.events;
 
 import joptsimple.internal.Reflection;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.SpawnGroupData;
+import net.minecraft.world.entity.animal.horse.Horse;
 import net.minecraft.world.entity.animal.horse.ZombieHorse;
 import net.minecraft.world.entity.monster.*;
+import net.minecraft.world.entity.monster.piglin.Piglin;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -90,7 +96,14 @@ public class InteractWithZombiesEventHandler {
      */
     protected static void playerInteractsWithZombieHorse(PlayerInteractEvent.EntityInteractSpecific event) {
         ZombieHorse zombieHorse = (ZombieHorse) event.getTarget();
+        ServerLevel level = (ServerLevel) event.getLevel();
         if (meetsConversionRequirements(zombieHorse)) {
+            Horse horse = zombieHorse.convertTo(EntityType.HORSE, true);
+
+            horse.finalizeSpawn(level, level.getCurrentDifficultyAt(horse.blockPosition()), MobSpawnType.CONVERSION, (SpawnGroupData)null, (CompoundTag)null);
+            horse.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
+            level.levelEvent((Player)null, 1027, horse.blockPosition(), 0);
+            event.getEntity().getItemInHand(event.getHand()).shrink(1);
         }
     }
 
@@ -104,6 +117,7 @@ public class InteractWithZombiesEventHandler {
         ZombieVillager zombieVillager = (ZombieVillager) event.getTarget();
         if (meetsConversionRequirements(zombieVillager)) {
             zombieVillager.finishConversion((ServerLevel) event.getLevel());
+            event.getEntity().getItemInHand(event.getHand()).shrink(1);
         }
     }
 
@@ -115,7 +129,15 @@ public class InteractWithZombiesEventHandler {
      */
     protected static void playerInteractsWithZombiePiglin(PlayerInteractEvent.EntityInteractSpecific event) {
         ZombifiedPiglin zombifiedPiglin = (ZombifiedPiglin) event.getTarget();
+        ServerLevel level = (ServerLevel) event.getLevel();
+
         if (meetsConversionRequirements(zombifiedPiglin)) {
+            Piglin piglin = zombifiedPiglin.convertTo(EntityType.PIGLIN, true);
+
+            piglin.finalizeSpawn(level, level.getCurrentDifficultyAt(piglin.blockPosition()), MobSpawnType.CONVERSION, (SpawnGroupData)null, (CompoundTag)null);
+            piglin.addEffect(new MobEffectInstance(MobEffects.CONFUSION, 200, 0));
+            level.levelEvent((Player)null, 1027, piglin.blockPosition(), 0);
+            event.getEntity().getItemInHand(event.getHand()).shrink(1);
         }
     }
 }
