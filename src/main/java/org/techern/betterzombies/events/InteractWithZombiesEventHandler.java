@@ -1,6 +1,8 @@
 package org.techern.betterzombies.events;
 
+import joptsimple.internal.Reflection;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -101,6 +103,7 @@ public class InteractWithZombiesEventHandler {
     protected static void playerInteractsWithZombieVillager(PlayerInteractEvent.EntityInteractSpecific event) {
         ZombieVillager zombieVillager = (ZombieVillager) event.getTarget();
         if (meetsConversionRequirements(zombieVillager)) {
+            zombieVillager.finishConversion((ServerLevel) event.getLevel());
         }
     }
 
