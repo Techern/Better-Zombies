@@ -18,13 +18,14 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import org.techern.betterzombies.BetterZombies;
 
 /**
  * Handles all {@link PlayerInteractEvent.EntityInteractSpecific}s and filters out zombie-related events to {@code #playerInteractsWithZombie}
  *
  * @since 0.1
  */
-@Mod.EventBusSubscriber(modid = "betterzombies", bus = Mod.EventBusSubscriber.Bus.FORGE)
+@Mod.EventBusSubscriber(modid = BetterZombies.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class InteractWithZombiesEventHandler {
 
     /**
